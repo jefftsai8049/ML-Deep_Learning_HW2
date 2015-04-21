@@ -90,3 +90,4 @@ raw(R) = {NaN}; % Replace non-numeric cells
 
 %% Create output variable
 trainsorted = cell2mat(raw);
+trainsorted = trainsorted(:,2:size(trainsorted,2));

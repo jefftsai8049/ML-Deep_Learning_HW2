@@ -1,0 +1,10 @@
+function trainSet = getTrainSet(trainData,range,count)
+if count ==1
+    from = 1;
+    to = sum(range(1:count));
+
+else
+    from = sum(range(1:count-1))+1;
+    to = sum(range(1:count));
+end
+trainSet = trainData(range(from:to,:));
