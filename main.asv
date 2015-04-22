@@ -1,34 +1,51 @@
 %%
-% Load file
+matlabpool open local 6;
+%%
 
-% Load Sequence Length
-range = csvread('range.csv');
-% Load Train data  
-% trainData = importTrain('train_sorted.csv',1,inf);
-% (if load all data )
-trainData = importTrain('train_sorted.csv',1,1000);
-% Cut a Set (a segment)
-% trainSet = getTrainSet(trainData,range,1);
-% Cut labels
-% labels = num2cell(trainSet(:,1)');
-% Cut patterns
-% patterns = num2cell(trainSet(:,2:size(trainSet,2))',[1,size(trainSet,2)]);
+clear;
+dataDim = 69;
+labelDim = 48;
 
-[patterns labels] = getTrainSet(trainData,range,1,1);
+featureVector = importFeatureVector('feature_vector.csv',1,10);
+observation = featureVector(1:size(featureVector,1),1:dataDim*labelDim);
+observation = reshape(observation,labelDim*size(observation,1),[]);
+transition = featureVector(1:size(featureVector,1),dataDim*labelDim+1:end);
+transition = reshape(transition,labelDim*size(transition,1),[]);
+
+patterns = [observation transition];
+patterns = num2cell(patterns',[1 117]);
+
+labels = zeros(1,size(patterns,2))-1;
+for i=1:size(patterns,2)/labelDim
+    labels((i-1)*labelDim+1) = 1;
+end
+labels = num2cell(labels);
+svmParameters(1:labelDim) = struct('patterns',[],'labels',[],'lossFn',[],'constraintFn',[],'featureFn',[],);
 %%
 %Initail GPU Device
 gpu = gpuDevice;
-
+labels = gpuArray(labels);
+patterns = gpuArray(patterns);
 
 %%
-%SVM Initail
-svmParameters.patterns = patterns;
-svmParameters.labels = labels;
-svmParameters.lossFn = @lossCB ;
-svmParameters.constraintFn  = @constraintCB ;
-svmParameters.featureFn = @featureCB ;
-svmParameters.dimension = 69 ;
-% What ?
-svmParameters.verbose = 1 ;
-svmModel = svm_struct_learn(' -c 1.0 -o 1 -v 1 ', svmParameters) ;
-w = svmModel.w ;
+
+
+tic;
+parfor j=1:labelDim
+    %SVM Initail
+    svmParameters(j).patterns = patterns;
+    svmParameters(j).labels = labels;
+    svmParameters(j).lossFn = @lossCB ;
+    svmParameters(j).constraintFn  = @constraintCB ;
+    svmParameters(j).featureFn = @featureCB ;
+    svmParameters(j).dimension = dataDim+labelDim ;
+    % What ?
+    svmParameters(j).verbose = 0 ;
+    svmModel(j) = svm_struct_learn(' -c 1.0 -o 1 -v 1 ', svmParameters(j) );
+    w(:,j) = svmModel(j).w ;
+
+end
+toc;
+
+%%
+matlabpool close;
