@@ -30,7 +30,7 @@ tic;
     svmParameters.lossFn = @lossCB ;
     svmParameters.constraintFn  = @constraintCB ;
     svmParameters.featureFn = @featureCB ;
-    svmParameters.dimension = dataDim+labelDim ;
+    svmParameters.dimension = dataDim*labelDim+labelDim*labelDim ;
     % What ?
     svmParameters.verbose = 0 ;
     svmModel = svm_struct_learn(' -c 1.0 -o 1 -v 1 ', svmParameters );

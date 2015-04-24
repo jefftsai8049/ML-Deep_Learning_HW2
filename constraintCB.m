@@ -11,7 +11,7 @@ function yhat = constraintCB(param, model, x, y)
     labelDim = 48;
     sequenceLength = size(y,1);
     
-    
+
     wR = reshape(model.w(1:dataDim*labelDim,:),[labelDim dataDim]);  %48x69
     xR = reshape(x(1:dataDim*labelDim,:),[dataDim labelDim]);  %69*48
     probability = wR*xR; %48x48
@@ -20,14 +20,14 @@ function yhat = constraintCB(param, model, x, y)
     route=[ones(48,1)];
     delta = probability(:,1); %48x1
     for i=1:sequenceLength-1
-        p = remat(delta,labelDim)+wT; %48x48
-        [dummy suspect] = max(p); %1x48
+        p = repmat(delta,1,labelDim)+wT; %48x48
+        [dummy,suspect] = max(p); %1x48
         delta = dummy'+ probability(:,i+1); %48x1
         route = [route suspect']; %48x1
        
     end
     
-    [dummy endNode] = max(delta);
+    [dummy,endNode] = max(delta);
     temp = route(endNode,end);
     yhat = [];
     yhat = [yhat temp];
@@ -36,6 +36,7 @@ function yhat = constraintCB(param, model, x, y)
         yhat = [yhat temp];
     end
     yhat = fliplr(yhat-1);
+    
   if param.verbose
     fprintf('yhat = violslack([%8.3f,%8.3f], [%8.3f,%8.3f], %3d) = %3d\n', ...
             model.w, x, y, yhat) ;
