@@ -6,27 +6,19 @@ clear;
 dataDim = 69;
 labelDim = 48;
 
-featureVector = importFeatureVector('feature_vector.csv',1,10);
-observation = featureVector(1:size(featureVector,1),1:dataDim*labelDim);
-observation = reshape(observation,labelDim*size(observation,1),[]);
-transition = featureVector(1:size(featureVector,1),dataDim*labelDim+1:end);
-transition = reshape(transition,labelDim*size(transition,1),[]);
+featureVector = importFeatureVector('feature_vector.csv',1,100);
+patterns = num2cell(featureVector',[1 size(featureVector,1)]);
+sequence = importSequence('sequence.csv',1,100);
 
-patterns = [observation transition];
-patterns = num2cell(patterns',[1 117]);
-
-labels = zeros(1,size(patterns,2))-1;
-for i=1:size(patterns,2)/labelDim
-    labels((i-1)*labelDim+1) = 1;
-end
-labels = num2cell(labels);
-svmParameters(1:labelDim) = struct('patterns',[],'labels',[],'lossFn',[],'constraintFn',[],'featureFn',[],);
 %%
-%Initail GPU Device
-gpu = gpuDevice;
-labels = gpuArray(labels);
-patterns = gpuArray(patterns);
+label = struct();
+temp = sequence(1,:);
+temp = temp(~isnan(temp));
+temp = num2cell(temp',1);
 
+label = [label temp]
+
+svmParameters(1:labelDim) = struct('patterns',[],'labels',[],'lossFn',[],'constraintFn',[],'featureFn',[],'dimension',[],'verbose',[]);
 %%
 
 
@@ -34,7 +26,7 @@ tic;
 parfor j=1:labelDim
     %SVM Initail
     svmParameters(j).patterns = patterns;
-    svmParameters(j).labels = labels;
+    svmParameters(j).labels = labels(j,:);
     svmParameters(j).lossFn = @lossCB ;
     svmParameters(j).constraintFn  = @constraintCB ;
     svmParameters(j).featureFn = @featureCB ;

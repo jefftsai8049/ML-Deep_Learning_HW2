@@ -11,19 +11,20 @@ function yhat = constraintCB(param, model, x, y)
     labelDim = 48;
     sequenceLength = size(y,1);
     
+    i=1;
     
     wR = reshape(model.w(1:dataDim*labelDim,:),[labelDim dataDim]);  %48x69
     xR = reshape(x(1:dataDim*labelDim,:),[dataDim labelDim]);  %69*48
     probability = wR*xR; %48x48
     wT = reshape(model.w(dataDim*labelDim+1:end),[labelDim labelDim]); %48x48
     
-    for i=1:sequenceLength
-        p = remat(probability(:,i),labelDim)+wT; %48x48
-        [dummy suspect] = max(p); %1x48
-        delta = dummy'+ probability(:,i+1); %48x1
+    
+    p = remat(probability(i,:),labelDim)+wT; %48x48
+    [dummy suspect] = max(p); %1x48
+    delta = 
     
     
-    end
+    
     
     
   if param.verbose
