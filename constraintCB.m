@@ -17,15 +17,25 @@ function yhat = constraintCB(param, model, x, y)
     probability = wR*xR; %48x48
     wT = reshape(model.w(dataDim*labelDim+1:end),[labelDim labelDim]); %48x48
     
-    for i=1:sequenceLength
-        p = remat(probability(:,i),labelDim)+wT; %48x48
+    route=[ones(48,1)];
+    delta = probability(:,1); %48x1
+    for i=1:sequenceLength-1
+        p = remat(delta,labelDim)+wT; %48x48
         [dummy suspect] = max(p); %1x48
         delta = dummy'+ probability(:,i+1); %48x1
-    
-    
+        route = [route suspect']; %48x1
+       
     end
     
-    
+    [dummy endNode] = max(delta);
+    temp = route(endNode,end);
+    yhat = [];
+    yhat = [yhat temp];
+    for j=2:sequenceLength
+        temp = route(temp,end+1-j);
+        yhat = [yhat temp];
+    end
+    yhat = fliplr(yhat-1);
   if param.verbose
     fprintf('yhat = violslack([%8.3f,%8.3f], [%8.3f,%8.3f], %3d) = %3d\n', ...
             model.w, x, y, yhat) ;
