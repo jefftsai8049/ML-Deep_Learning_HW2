@@ -1,43 +1,47 @@
 %%
-matlabpool open local 6;
-%%
 
 clear;
 dataDim = 69;
 labelDim = 48;
 
 featureVector = importFeatureVector('feature_vector.csv',1,100);
-patterns = num2cell(featureVector',[1 size(featureVector,1)]);
+% patterns = num2cell(featureVector',[1 size(featureVector,1)]);
 sequence = importSequence('sequence.csv',1,100);
 
-%%
-label = struct();
-temp = sequence(1,:);
-temp = temp(~isnan(temp));
-temp = num2cell(temp',1);
+range = csvread('range.csv');
 
-label = [label temp]
+trainData = importTrain('train_sorted.csv',1,1000);
+[patterns labels] = getTrainSet(trainData,range,1,1);
 
-svmParameters(1:labelDim) = struct('patterns',[],'labels',[],'lossFn',[],'constraintFn',[],'featureFn',[],'dimension',[],'verbose',[]);
+
+labels = {};
+for i=1:size(featureVector,1)
+    temp = sequence(i,:);
+    temp = temp(~isnan(temp));
+    temp = num2cell(temp',1);
+
+    labels = [labels temp];
+end
+
+
+% svmParameters(1:labelDim) = struct('patterns',[],'labels',[],'lossFn',[],'constraintFn',[],'featureFn',[],'dimension',[],'verbose',[]);
 %%
 
 
 tic;
-parfor j=1:labelDim
+% parfor j=1:labelDim
     %SVM Initail
-    svmParameters(j).patterns = patterns;
-    svmParameters(j).labels = labels(j,:);
-    svmParameters(j).lossFn = @lossCB ;
-    svmParameters(j).constraintFn  = @constraintCB ;
-    svmParameters(j).featureFn = @featureCB ;
-    svmParameters(j).dimension = dataDim+labelDim ;
+    svmParameters.patterns = patterns;
+    svmParameters.labels = labels;
+    svmParameters.lossFn = @lossCB ;
+    svmParameters.constraintFn  = @constraintCB ;
+    svmParameters.featureFn = @featureCB ;
+    svmParameters.dimension = dataDim*labelDim+labelDim*labelDim ;
     % What ?
-    svmParameters(j).verbose = 0 ;
-    svmModel(j) = svm_struct_learn(' -c 1.0 -o 1 -v 1 ', svmParameters(j) );
-    w(:,j) = svmModel(j).w ;
+    svmParameters.verbose = 0 ;
+    svmModel = svm_struct_learn(' -c 1.0 -o 1 -v 1 ', svmParameters );
+    w = svmModel.w ;
 
-end
+% end
 toc;
 
-%%
-matlabpool close;

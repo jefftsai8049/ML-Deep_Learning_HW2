@@ -23,7 +23,7 @@ function yhat = constraintCB(param, model, x, y)
         p = repmat(delta,1,labelDim)+wT; %48x48
         [dummy,suspect] = max(p); %1x48
         delta = dummy'+ probability(:,i+1); %48x1
-        route = [route suspect']; %48x1
+        route = [route suspect']; %48x3
        
     end
     

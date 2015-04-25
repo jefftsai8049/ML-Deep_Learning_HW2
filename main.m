@@ -1,14 +1,17 @@
 %%
-matlabpool open local 6;
-%%
 
 clear;
 dataDim = 69;
 labelDim = 48;
 
-featureVector = importFeatureVector('feature_vector.csv',1,100);
-patterns = num2cell(featureVector',[1 size(featureVector,1)]);
+% featureVector = importFeatureVector('feature_vector.csv',1,100);
+
 sequence = importSequence('sequence.csv',1,100);
+
+range = csvread('range.csv');
+trainData = importTrain('train_sorted.csv',1,1000);
+patterns= getTrainSet(trainData,range,1,1);
+
 
 labels = {};
 for i=1:size(featureVector,1)
@@ -18,6 +21,8 @@ for i=1:size(featureVector,1)
 
     labels = [labels temp];
 end
+
+
 % svmParameters(1:labelDim) = struct('patterns',[],'labels',[],'lossFn',[],'constraintFn',[],'featureFn',[],'dimension',[],'verbose',[]);
 %%
 
@@ -39,5 +44,3 @@ tic;
 % end
 toc;
 
-%%
-matlabpool close;
