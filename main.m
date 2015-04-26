@@ -5,7 +5,7 @@ dataDim = 69;
 labelDim = 48;
 
 % dataNumber = 3696; %import data number
-dataNumber = 1000;
+dataNumber = 3695;
 %load file
 fprintf('Loading range.csv\n');
 range = csvread('range.csv');
@@ -13,7 +13,7 @@ fprintf('Loading train_sorted.csv\n');
 trainData = dlmread('train_sorted.csv',',',[0 1 sum(range(1:dataNumber)) dataDim+1]);
 fprintf('Load file ok!\n');
 toc;
-%%
+
 %reshape file
 tic;
 fprintf('Reshaping file!\n');
