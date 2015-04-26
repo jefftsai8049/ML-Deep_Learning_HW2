@@ -13,16 +13,14 @@ function yhat = constraintCB(param, model, x, y)
     probability = wR*xR; %48xdataNumber
     wT = reshape(model.w(dataDim*labelDim+1:end),[labelDim labelDim]); %48x48
     
-    alpha = 0.001;
+    
     
     route=[ones(48,sequenceLength)]; %48xsequence
     delta = probability(:,1); %48x1
     for i=1:sequenceLength-1
         p = repmat(delta,1,labelDim)+wT; %48x48
         [dummy,suspect] = max(p); %1x48
-        error = suspect - y(i,1) -1; %1x48
-        error = ceil(abs(error)/47).*alpha; %1x48
-        delta = (dummy+error)'+ probability(:,i+1); %48x1
+        delta = dummy'+ probability(:,i+1); %48x1
         route(:,i+1) = suspect'; %48xi
 %        
     end

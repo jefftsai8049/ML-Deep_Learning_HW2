@@ -11,7 +11,7 @@ function psi = featureCB(param, x, y)
         featureVector(y(i,1)+1,1:dataDim) = featureVector(y(i,1)+1,1:dataDim)+xNum(i,:); 
         featureVector(y(i,1)+1,dataDim+y(i,1)+1) = featureVector(y(i,1)+1,dataDim+y(i,1)+1)+1;
     end
-    featureVector = reshape(featureVector,[dataDim*labelDim+labelDim*labelDim 1])
+    featureVector = reshape(featureVector,[dataDim*labelDim+labelDim*labelDim 1]);
         
     
   psi = sparse(featureVector);
