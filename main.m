@@ -4,7 +4,7 @@ clear;
 dataDim = 69;
 labelDim = 48;
 
-dataNumber = 10; %import data number
+dataNumber = 100; %import data number
 
 %load file
 sequence = importSequence('sequence.csv',1,dataNumber);

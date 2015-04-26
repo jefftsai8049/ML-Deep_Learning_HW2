@@ -1,17 +1,8 @@
 function psi = featureCB(param, x, y)
-    dataDim = 69;
-    labelDim = 48;
-
-    sequenceLength = size(y,1);
-    featureVector = zeros(labelDim,dataDim+labelDim);
-
     xNum = cell2mat(x);
-%     y = cell2mat(y);
-    for i=1:sequenceLength
-        featureVector(y(i,1)+1,1:dataDim) = featureVector(y(i,1)+1,1:dataDim)+xNum(i,:); 
-        featureVector(y(i,1)+1,dataDim+y(i,1)+1) = featureVector(y(i,1)+1,dataDim+y(i,1)+1)+1;
-    end
-    featureVector = reshape(featureVector,[dataDim*labelDim+labelDim*labelDim 1]);
+    featureVector = getFeatureVector(xNum,y);
+
+    
         
     
   psi = sparse(featureVector);
