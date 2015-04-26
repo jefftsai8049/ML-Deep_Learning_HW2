@@ -31,7 +31,7 @@ svmParameters.featureFn = @featureCB ;
 svmParameters.dimension = dataDim*labelDim+labelDim*labelDim ;
 % What ?
 svmParameters.verbose = 0 ;
-svmModel = svm_struct_learn(' -c 1.0 -o 2 -v 1 ', svmParameters );
+svmModel = svm_struct_learn(' -c 0.1 -o 2 -v 1 ', svmParameters );
 w = svmModel.w ;
 toc;
 
