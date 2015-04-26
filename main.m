@@ -15,8 +15,9 @@ fprintf('Load file ok!\n');
 toc;
 %%
 %reshape file
+fprintf('Reshaping file!\n');
 [patterns labels] = getTrainSet(trainData,range,1,dataNumber);
-% fprintf('Reshape file ok!\n');
+fprintf('Reshape file ok!\n');
 %%
 tic;
 %SVM Initail
