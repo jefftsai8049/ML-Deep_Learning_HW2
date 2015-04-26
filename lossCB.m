@@ -1,5 +1,5 @@
 function delta = lossCB(param, y, ybar)
-  delta = sum(~isequal(y,ybar));
+  delta = sum(~isequal(y,ybar))/size(y,1);
   
   
 %   %N=frames,ybar=probability(framesx48)
