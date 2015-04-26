@@ -8,10 +8,10 @@ function yhat = constraintCB(param, model, x, y)
     
     
    
-    wR = reshape(model.w(1:dataDim*labelDim,:),[labelDim dataDim]);  %48x69
-    xR = reshape(x,[dataDim sequenceLength]);  %69*dataNumber
+    wR = reshape(model.w(1:dataDim*labelDim,:)',[labelDim dataDim]);  %48x69
+    xR = x';  %69*dataNumber
     probability = wR*xR; %48xdataNumber
-    wT = reshape(model.w(dataDim*labelDim+1:end),[labelDim labelDim]); %48x48
+    wT = reshape(model.w(dataDim*labelDim+1:end)',[labelDim labelDim]); %48x48
     
     alpha = 0.001;
     
@@ -36,6 +36,8 @@ function yhat = constraintCB(param, model, x, y)
         yhat(j,1) = temp;
     end
     yhat = flipud(yhat-1);
+    
+   
     
 %     yhat = 10;
   if param.verbose
