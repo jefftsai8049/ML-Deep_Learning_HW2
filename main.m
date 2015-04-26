@@ -5,25 +5,23 @@ dataDim = 69;
 labelDim = 48;
 
 dataNumber = 3696; %import data number
-
+% dataNumber = 10;
 %load file
-fprintf('Loading sequence.csv\n');
-sequence = importSequence('sequence.csv',1,dataNumber);
 fprintf('Loading range.csv\n');
 range = csvread('range.csv');
 fprintf('Loading train_sorted.csv\n');
-trainData = importTrain('train_sorted.csv',1,sum(range(1:dataNumber)));
+trainData = dlmread('train_sorted.csv',',',[0 1 sum(range(1:dataNumber)) dataDim]);
 toc;
 %%
 %reshape file
-patterns= getTrainSet(trainData,range,1,dataNumber);
-labels = cell(1,dataNumber);
-for i=1:dataNumber
-    temp = sequence(i,:);
-    temp = temp(~isnan(temp));
-    temp = num2cell(temp',1);
-    labels(i) = temp;
-end
+[patterns labels] = getTrainSet(trainData,range,1,dataNumber);
+% labels = cell(1,dataNumber);
+% for i=1:dataNumber
+%     temp = sequence(i,:);
+%     temp = temp(~isnan(temp));
+%     temp = num2cell(temp',1);
+%     labels(i) = temp;
+% end
 %%
 tic;
 %SVM Initail
