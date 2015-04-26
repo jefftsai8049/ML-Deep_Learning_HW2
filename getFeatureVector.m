@@ -5,7 +5,9 @@ function featureVector = getFeatureVector(xNum,y)
     sequenceLength = size(y,1);
     temp = zeros(labelDim,dataDim+labelDim);
 
-    
+%     whos y
+%     whos xNum
+%     whos temp
 %     y = cell2mat(y);
     for i=1:sequenceLength-1
         temp(y(i,1)+1,1:dataDim) = temp(y(i,1)+1,1:dataDim)+xNum(i,:); 

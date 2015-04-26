@@ -1,6 +1,6 @@
 function psi = featureCB(param, x, y)
-    xNum = cell2mat(x);
-    featureVector = getFeatureVector(xNum,y);
+%     xNum = cell2mat(x);
+    featureVector = getFeatureVector(x,y);
 
     
         

@@ -9,7 +9,7 @@ function yhat = constraintCB(param, model, x, y)
     
    
     wR = reshape(model.w(1:dataDim*labelDim,:),[labelDim dataDim]);  %48x69
-    xR = reshape(cell2mat(x),[dataDim sequenceLength]);  %69*dataNumber
+    xR = reshape(x,[dataDim sequenceLength]);  %69*dataNumber
     probability = wR*xR; %48xdataNumber
     wT = reshape(model.w(dataDim*labelDim+1:end),[labelDim labelDim]); %48x48
     
