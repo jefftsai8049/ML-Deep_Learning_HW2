@@ -12,3 +12,4 @@ for i=startRow:endRow
     fprintf(i);
     fprintf('\n');
 end
+end
