@@ -8,9 +8,12 @@ for i=startRow:endRow
     
     trainSet = trainData(index:index+delta-1,2:end);
     trainLabels = trainData(index:index+delta-1,1);
+    
     index = index+delta;
-    temp = {num2cell(trainSet)};
-    tempLabels = {num2cell(trainLabels)};
-    patterns(i) = temp;
-    labels(i) = tempLabels;
+   
+    patterns(i) = {num2cell(trainSet)};
+    labels(i) = {num2cell(trainLabels)};
+    fprintf('Reshapeing...');
+    fprintf(i);
+    fprintf('\n');
 end

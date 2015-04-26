@@ -16,14 +16,7 @@ toc;
 %%
 %reshape file
 [patterns labels] = getTrainSet(trainData,range,1,dataNumber);
-fprintf('Reshape file ok!\n');
-% labels = cell(1,dataNumber);
-% for i=1:dataNumber
-%     temp = sequence(i,:);
-%     temp = temp(~isnan(temp));
-%     temp = num2cell(temp',1);
-%     labels(i) = temp;
-% end
+% fprintf('Reshape file ok!\n');
 %%
 tic;
 %SVM Initail
