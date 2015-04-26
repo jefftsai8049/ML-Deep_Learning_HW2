@@ -4,8 +4,8 @@ function psi = featureCB(param, x, y)
 
     
         
-    whos featureVector
-  psi = sparse(featureVector);
+
+  psi = sparse(featureVector');
   
   if param.verbose
     fprintf('w = psi([%8.3f,%8.3f], %3d) = [%8.3f, %8.3f]\n', ...

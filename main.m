@@ -5,7 +5,7 @@ dataDim = 69;
 labelDim = 48;
 
 % dataNumber = 3696; %import data number
-dataNumber = 20;
+dataNumber = 100;
 %load file
 fprintf('Loading range.csv\n');
 range = csvread('range.csv');
@@ -31,7 +31,7 @@ svmParameters.featureFn = @featureCB ;
 svmParameters.dimension = dataDim*labelDim+labelDim*labelDim ;
 % What ?
 svmParameters.verbose = 0 ;
-svmModel = svm_struct_learn(' -c 0.01 -o 2 -v 1 ', svmParameters );
+svmModel = svm_struct_learn(' -c 10 -o 2 -v 1 ', svmParameters );
 w = svmModel.w ;
 toc;
 
