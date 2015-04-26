@@ -5,7 +5,7 @@ dataDim = 69;
 labelDim = 48;
 
 % dataNumber = 3696; %import data number
-dataNumber = 3695;
+dataNumber = 20;
 %load file
 fprintf('Loading range.csv\n');
 range = csvread('range.csv');

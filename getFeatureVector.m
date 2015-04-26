@@ -1,5 +1,5 @@
 function featureVector = getFeatureVector(xNum,y)
-
+    % x nx69
     dataDim = 69;
     labelDim = 48;
     sequenceLength = size(y,1);

@@ -4,7 +4,7 @@ function psi = featureCB(param, x, y)
 
     
         
-    
+    whos featureVector
   psi = sparse(featureVector);
   
   if param.verbose
