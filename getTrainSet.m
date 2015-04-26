@@ -8,8 +8,8 @@ for i=startRow:endRow
     patterns(i) = {num2cell(trainData(index:index+delta-1,2:end))};
     labels(i) = {num2cell(trainData(index:index+delta-1,1))};
     index = index+delta;
-    fprintf('Reshapeing...');
-    fprintf(i);
-    fprintf('\n');
+%     fprintf('Reshapeing...');
+%     fprintf(i);
+%     fprintf('\n');
 end
 end
