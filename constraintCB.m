@@ -1,47 +1,66 @@
 function yhat = constraintCB(param, model, x, y)
 % slack resaling: argmax_y delta(yi, y) (1 + <psi(x,y), w> - <psi(x,yi), w>)
 % margin rescaling: argmax_y delta(yi, y) + <psi(x,y), w>
-    dataDim = 69;
-    labelDim = 48;
-    sequenceLength = size(y,1);
+    %dataDim = 69;
+    %labelDim = 48;
+        
+    W = model.w;
+        
+    X = x';  % transpose of x'
     
+    alpha = 1;
     
+    number_of_phonemes = size(X, 2);       % X should be a 69 x n matrix, each column is a phoneme
+    path = zeros(48);                      % each row is a path for each ending node in Viterbi Algorithm  (path is backwards!!)
+    path_last = path;
+    prob = zeros(48,1);                    % 48 x 1 vector which saves probability for each ending node
+    prob_last = prob;
     
-   
-    wR = reshape(model.w(1:dataDim*labelDim,:)',[labelDim dataDim]);  %48x69
-    xR = x';  %69*dataNumber
-    probability = wR*xR; %48xdataNumber
-    wT = reshape(model.w(dataDim*labelDim+1:end)',[labelDim labelDim]); %48x48
+    % W is a vector of length 69*48 + 48*48        
+    W_observe = reshape(W(1:69*48), 69, 48);      % W_observe are 48 vectors of length 69 corresponding to Wa, Wb, ......
+    W_trans = reshape(W(69*48+1:end), 48, 48);     % W_observe are 48 vectors of length 48 corresponding to Waa, Wab, ......
     
-    alpha = 0.001;
+    %=========== initialize first column ================
+    path = (1:48)';                          % path is backwards! 
+    path_last = path;
     
-    route=[ones(48,sequenceLength)]; %48xsequence
-    delta = probability(:,1); %48x1
-    for i=1:sequenceLength-1
-        p = repmat(delta,1,labelDim)+wT; %48x48
-        [dummy,suspect] = max(p); %1x48
-        error = suspect - y(i,1) -1; %1x48
-        error = ceil(abs(error)/47).*alpha; %1x48
-        delta = (dummy+error)'+ probability(:,i+1); %48x1
-        route(:,i+1) = suspect'; %48xi
-%        
+    for current_node = 1:48                 
+        prob(current_node) = W_observe(:, current_node)' * X(:, 1);
+        prob = prob + alpha;    % add delta y to all nodes
+        prob(y(1) + 1) = prob(y(1) + 1) - alpha;  % except the one that is correct    
+        prob_last = prob;              
     end
-%     
-    [dummy,endNode] = max(delta); %final node 
-    yhat = zeros(sequenceLength,1); %initial 
-    temp = route(endNode,end); 
-    yhat(1,1) = temp;
-    for j=2:sequenceLength
-        temp = route(temp,end+1-j);
-        yhat(j,1) = temp;
+     
+    %============= Viterbi ============== 
+
+    for current_phoneme = 1:number_of_phonemes-1
+        path = zeros(48, current_phoneme + 1);
+        prob_temp = zeros(48, 1);
+        for current_node = 1:48      
+            prob_temp = prob_last + W_trans(current_node, :)';   % 48 x 1 vector 
+            [value, node_coming] = max(prob_temp);               
+            prob(current_node) = value + W_observe(:, current_node)' * X(:, current_phoneme + 1);           
+            path(current_node, :) = [current_node  path_last(node_coming, :)];
+        end
+        
+        prob = prob + alpha;    % add delta y to all nodes
+        prob(y(current_phoneme+1) + 1) = prob(y(current_phoneme+1) + 1) - alpha;  % except the one that is correct    
+        
+        path_last = path;    
+        prob_last = prob;
     end
-    yhat = flipud(yhat-1);
     
-   
+    [dummy, which_node] = max(prob);
+
+    reverse_sequence = path(which_node, :);
     
-%     yhat = 10;
-  if param.verbose
-    fprintf('yhat = violslack([%8.3f,%8.3f], [%8.3f,%8.3f], %3d) = %3d\n', ...
-            model.w, x, y, yhat) ;
-  end
+    sequence = fliplr(reverse_sequence) - 1;  % -1 to map from 1~48 to 0~47 
+    
+    yhat = sequence';
+    
+
+      if param.verbose
+        fprintf('yhat = violslack([%8.3f,%8.3f], [%8.3f,%8.3f], %3d) = %3d\n', ...
+                model.w, x, y, yhat) ;
+      end
 end
