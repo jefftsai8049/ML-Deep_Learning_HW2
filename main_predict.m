@@ -5,11 +5,11 @@ W = rand(69*48+48*48,1);
 X = rand(69,100);
 %}
 
-number_of_sentences = size(patterns, 2);
+number_of_sentences = 10;
 
 correctness = 0;
 
-for current_sentence = 1:10
+for current_sentence = 1:number_of_sentences
     
     X = patterns{current_sentence}';
     Y = labels{current_sentence}';
@@ -20,7 +20,8 @@ for current_sentence = 1:10
     %Y = randi([0 47],1,number_of_frames);
     
     sequence = predict(w, X);
-     
+    sum(Y == sequence)
+    number_of_frames
     correctness = correctness + sum(Y == sequence) / number_of_frames;
     
 end
