@@ -8,7 +8,7 @@ function yhat = constraintCB(param, model, x, y)
         
     X = x';  % transpose of x'
     
-    alpha = 1;
+    alpha = 0.1;
     
     number_of_phonemes = size(X, 2);       % X should be a 69 x n matrix, each column is a phoneme
     path = zeros(48);                      % each row is a path for each ending node in Viterbi Algorithm  (path is backwards!!)

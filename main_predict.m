@@ -5,7 +5,7 @@ W = rand(69*48+48*48,1);
 X = rand(69,100);
 %}
 
-number_of_sentences = 10;
+number_of_sentences = 1000;
 
 correctness = 0;
 
@@ -20,8 +20,7 @@ for current_sentence = 1:number_of_sentences
     %Y = randi([0 47],1,number_of_frames);
     
     sequence = predict(w, X);
-    sum(Y == sequence)
-    number_of_frames
+%     sum(Y == sequence)
     correctness = correctness + sum(Y == sequence) / number_of_frames;
     
 end
