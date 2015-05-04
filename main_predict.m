@@ -5,7 +5,7 @@ W = rand(69*48+48*48,1);
 X = rand(69,100);
 %}
 
-number_of_sentences = 1000;
+number_of_sentences = 100;
 
 correctness = 0;
 
@@ -16,18 +16,18 @@ for current_sentence = 1:number_of_sentences
 
     number_of_frames = size(X, 2);
 
-    %rng(0,'twister');
-    %Y = randi([0 47],1,number_of_frames);
     
     sequence = predict(w, X);
-%     sum(Y == sequence)
     correctness = correctness + sum(Y == sequence) / number_of_frames;
-    
+
+    dlmwrite('test_out_nomap_notrim.csv',sequence,'-append','delimiter', ',');  
+
 end
 
 correctness = correctness / number_of_sentences;
 
 fprintf('The correctness is  %f %%.   \n', correctness*100);
+
 
 
 

@@ -5,13 +5,16 @@ dataDim = 69;
 labelDim = 48;
 
 % dataNumber = 3696; %import data number
-dataNumber = 3695;
+dataNumber = 100;
 %load file
 fprintf('Loading range.csv\n');
 range = csvread('range.csv');
 fprintf('Loading train_sorted.csv\n');
 trainData = dlmread('train_sorted.csv',',',[0 1 sum(range(1:dataNumber)) dataDim+1]);
 fprintf('Load file ok!\n');
+
+
+
 toc;
 
 %reshape file
@@ -20,6 +23,8 @@ fprintf('Reshaping file!\n');
 [patterns,labels] = getTrainSet(trainData,range,1,dataNumber);
 fprintf('Reshape file ok!\n');
 toc;
+
+
 %%
 tic;
 %SVM Initail
